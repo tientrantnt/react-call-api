@@ -13,7 +13,7 @@ export default class App extends Component {
               <button type="button" className="btn btn-info mb-10">Thêm sản phẩm</button>              
               <div className="panel panel-primary">
                   <div className="panel-heading">
-                    <h3 className="panel-title">Danh sach sản phẩm1</h3>
+                    <h3 className="panel-title">Danh sach sản phẩm</h3>
                   </div>
                   <ProductList />
               </div>
