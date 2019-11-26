@@ -10,7 +10,7 @@ export default class Menu extends Component {
             <a>Trang chủ</a>
           </li>
           <li>
-            <a>Quản lý sản phẩm</a>
+            <a>Quản lý sản phẩm1</a>
           </li>
         </ul>
       </div>
