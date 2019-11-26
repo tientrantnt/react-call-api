@@ -20,12 +20,13 @@ const MenuLink = ({label,to,activeOnlyWhenExact})=>{
     exact={activeOnlyWhenExact}
     children = {({match})=>{
       var active = match ? 'active' : ''
-      return 
-      <li className={active}>
-        <Link to={to}>
-          {label}
-        </Link>
-      </li>    
+      return (
+        <li className={active}>
+          <Link to={to}>
+            {label}
+          </Link>
+        </li>
+      )        
     }}
   />
 };
@@ -33,7 +34,7 @@ export default class Menu extends Component {
   render() {
     return (
       <div className="navbar navbar-default">
-        <a className="navbar-brand">CALL API</a>
+        <Link className="navbar-brand">CALL API</Link>
         <ul className="nav navbar-nav">
           {this.showMenus(menus)}
         </ul>
@@ -43,9 +44,16 @@ export default class Menu extends Component {
   showMenus  = (menus) =>{
     var result = null;
     if(menus.length > 0){
-      return <MenuLink 
-        
-      />
+      result = menus.map((menu,index)=>{
+        return (
+          <MenuLink
+            id={index}
+            label={menu.name}
+            to={menu.to}
+            activeOnlyWhenExact={menu.exact}
+          />
+        ) 
+      });
     }
     return result;
   }
