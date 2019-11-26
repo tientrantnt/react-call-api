@@ -7,7 +7,7 @@ export default class Menu extends Component {
         <a className="navbar-brand">CALL API</a>
         <ul className="nav navbar-nav">
           <li className="active">
-            <a>Trang chủ</a>
+            <a href={"/"}>Trang chủ</a>
           </li>
           <li>
             <a>Quản lý sản phẩm</a>
