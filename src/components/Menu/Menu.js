@@ -34,7 +34,7 @@ export default class Menu extends Component {
   render() {
     return (
       <div className="navbar navbar-default">
-        <Link className="navbar-brand">CALL API</Link>
+        <Link className="navbar-brand" to={"/"}>CALL API</Link>
         <ul className="nav navbar-nav">
           {this.showMenus(menus)}
         </ul>
@@ -47,6 +47,7 @@ export default class Menu extends Component {
       result = menus.map((menu,index)=>{
         return (
           <MenuLink
+            key={index}
             id={index}
             label={menu.name}
             to={menu.to}
