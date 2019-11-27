@@ -18,6 +18,22 @@ class ProductListPage extends Component {
       })
     });
   }
+  onDelele = (id) =>{
+    var {products} = this.state;   
+    callApi(`products/${id}`,'DELETE',null).then((res)=>{
+      if(res.status === 200){
+        var index = products.findIndex( index => index.id === id);
+        if(index !== -1){
+          products.splice(index,1);
+          this.setState({
+            products : products
+          })
+        }
+      }
+      
+      
+    });
+  }
   render() {      
     var {products} = this.state;     
     return (
@@ -41,7 +57,7 @@ class ProductListPage extends Component {
       var result = null;
       if(products.length > 0){
         result = products.map((product , index)=>{
-            return <ProductItem key={index} product = {product} index = {index}/>
+            return <ProductItem key={index} product = {product} index = {index} onDelele = {this.onDelele}/>
         });
       }
       return result;
