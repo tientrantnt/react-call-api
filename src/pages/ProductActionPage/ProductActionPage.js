@@ -21,15 +21,39 @@ export default class ProductActionPage extends Component {
   }
   onSave = (e) =>{
     e.preventDefault();
-    var {txtName,txtPrice,chkbStatus} = this.state;
+    var {id,txtName,txtPrice,chkbStatus} = this.state;
     var {history} = this.props;
-    callApi('products','POST',{
-      name:txtName,
-      price:txtPrice,
-      status:chkbStatus
-    }).then((res)=>{
-      history.goBack();
-    })
+    if(id){
+      callApi(`products/${id}`,'PUT',{
+        name:txtName,
+        price:txtPrice,
+        status:chkbStatus
+      }).then((res)=>{
+        history.goBack();
+      })
+    }else{
+      callApi('products','POST',{
+        name:txtName,
+        price:txtPrice,
+        status:chkbStatus
+      }).then((res)=>{
+        history.goBack();
+      })
+    }    
+  }
+  componentDidMount() {
+    var {match} = this.props;
+    if(match){
+      var id = match.params.id;
+      callApi(`products/${id}`,'GET',null).then((res)=>{
+        this.setState({
+          id:res.data.id,
+          txtName: res.data.name,
+          txtPrice : res.data.price,
+          chkbStatus : res.data.status,
+        })
+      });
+    }
   }
   render() {
     var {txtName,txtPrice,chkbStatus} = this.state;
@@ -51,7 +75,7 @@ export default class ProductActionPage extends Component {
           </div>
           <div className="checkbox">
             <label>
-            <input type="checkbox" name="chkbStatus" value={chkbStatus} onChange={this.onChange}/> Còn hàng
+            <input type="checkbox" name="chkbStatus" value={chkbStatus} onChange={this.onChange} checked={chkbStatus}/> Còn hàng
             </label>            
           </div>
           <Link to="/product-list" className="btn btn-info mr-10">Quay lại</Link>
