@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import ProductList from '../../components/ProductList/ProductList';
 import ProductItem from '../../components/ProductItem/ProductItem';
 import {connect} from 'react-redux';
-import callApi from './../../utils/apiCaller';
 import {Link} from 'react-router-dom';
-import {actFetchProductsRequest} from './../../actions/index';
+import {actFetchProductsRequest , actDeleteProductRequest} from './../../actions/index';
 class ProductListPage extends Component {
   constructor(props) {
     super(props);
@@ -15,21 +14,8 @@ class ProductListPage extends Component {
   componentDidMount () {    
     this.props.fecthAllProducts();
   }
-  onDelele = (id) =>{
-    var {products} = this.state;   
-    callApi(`products/${id}`,'DELETE',null).then((res)=>{
-      if(res.status === 200){
-        var index = products.findIndex( index => index.id === id);
-        if(index !== -1){
-          products.splice(index,1);
-          this.setState({
-            products : products
-          })
-        }
-      }
-      
-      
-    });
+  onDelele = (id) =>{      
+      this.props.onDeleteProduct(id);
   }
   render() {      
     var {products} = this.props;     
@@ -69,7 +55,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fecthAllProducts: () => {
       dispatch(actFetchProductsRequest())
-    }
+    },
+    onDeleteProduct: (id) => {
+      dispatch(actDeleteProductRequest(id))
+    },
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(ProductListPage);

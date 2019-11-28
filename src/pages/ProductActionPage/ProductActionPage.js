@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import callApi from './../../utils/apiCaller';
 import {Link} from 'react-router-dom';
-export default class ProductActionPage extends Component {
+import {connect} from 'react-redux';
+import {actAddProductRequest,actGetProductRequest,actUpdateProductRequest} from './../../actions/index';
+class ProductActionPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,38 +24,48 @@ export default class ProductActionPage extends Component {
     e.preventDefault();
     var {id,txtName,txtPrice,chkbStatus} = this.state;
     var {history} = this.props;
+    const product  = {
+      id: id,
+      name:txtName,
+      price:txtPrice,
+      status:chkbStatus
+    }
     if(id){
-      callApi(`products/${id}`,'PUT',{
-        name:txtName,
-        price:txtPrice,
-        status:chkbStatus
-      }).then((res)=>{
-        history.goBack();
-      })
+      this.props.onUpdateProduct(product);
+      history.goBack();
     }else{
-      callApi('products','POST',{
-        name:txtName,
-        price:txtPrice,
-        status:chkbStatus
-      }).then((res)=>{
-        history.goBack();
-      })
+      this.props.onAddProduct(product);
+      history.goBack();
     }    
   }
   componentDidMount() {
     var {match} = this.props;
     if(match){
       var id = match.params.id;
-      callApi(`products/${id}`,'GET',null).then((res)=>{
-        this.setState({
-          id:res.data.id,
-          txtName: res.data.name,
-          txtPrice : res.data.price,
-          chkbStatus : res.data.status,
-        })
-      });
+      // callApi(`products/${id}`,'GET',null).then((res)=>{
+      //   this.setState({
+      //     id:res.data.id,
+      //     txtName: res.data.name,
+      //     txtPrice : res.data.price,
+      //     chkbStatus : res.data.status,
+      //   })
+      // });
+      this.props.onGetProduct(id);
+      
     }
   }
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if(nextProps && nextProps.itemEditing){
+      var {itemEditing} = nextProps;
+      this.setState({
+        id:itemEditing.id,
+        txtName: itemEditing.name,
+        txtPrice : itemEditing.price,
+        chkbStatus : itemEditing.status,
+      })
+    }
+  }
+    
   render() {
     var {txtName,txtPrice,chkbStatus} = this.state;
     return (
@@ -88,3 +99,22 @@ export default class ProductActionPage extends Component {
   }
 
 }
+const mapStateToProps = (state) => {
+  return {
+    itemEditing : state.itemEditing
+  }
+}
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onAddProduct: (product) => {
+      dispatch(actAddProductRequest(product))
+    },
+    onGetProduct: (id) => {
+      dispatch(actGetProductRequest(id));
+    },
+    onUpdateProduct : (product)=>{
+      dispatch(actUpdateProductRequest(product));
+    }
+  }
+}
+export default  connect(mapStateToProps, mapDispatchToProps,)(ProductActionPage) ;
